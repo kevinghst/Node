@@ -1,0 +1,20 @@
+{
+  "name": "node-js-program",
+  "version": "1.0.0",
+  "description": "a little test app",
+  "main": "program.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node program.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinghst/Node.git"
+  },
+  "author": "me",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevinghst/Node/issues"
+  },
+  "homepage": "https://github.com/kevinghst/Node#readme"
+}

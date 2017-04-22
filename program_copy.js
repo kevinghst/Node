@@ -1,6 +1,5 @@
 const ogFolder = './files/original';
 const fs = require('fs');
-let renameModule = require('./lib/rename');
 
 fs.readdir(ogFolder, (err, files) => {
   let errors = 0;
@@ -12,10 +11,9 @@ fs.readdir(ogFolder, (err, files) => {
     let nameArray = file.split(".");
     let fileName = nameArray[0];
     let fileType = nameArray[1];
-
+    count += 1;
 
     fs.readFile(`${ogFolder}/${file}`, function(err, data){
-      count += 1;
       if (err) {
         errors += 1;
         if(count === files.length){
@@ -27,12 +25,14 @@ fs.readdir(ogFolder, (err, files) => {
       try{
         if(fileType === 'json'){
           let json;
-          if(data.length===0){
-            json = {"boo": "test"};
-          } else {
-            json = JSON.parse(data);
-            json.boo = 'test';
-          }
+          // if(data.length===0){
+          //   json = {"boo": "test"};
+          // } else {
+          //   json = JSON.parse(data);
+          //   json.boo = 'test';
+          // }
+          json = JSON.parse(data);
+          json.boo = 'test';
 
           fs.writeFile(`${ogFolder}/${file}`, JSON.stringify(json));
         } else {
@@ -43,7 +43,11 @@ fs.readdir(ogFolder, (err, files) => {
         let currentDate = getCurrentDate();
         let newPath = './files/moved/' + fileName + '_EDITED_' + currentDate + fileType;
 
-        renameModule.rename(oldPath, newPath);
+        fs.rename(oldPath, newPath, function (err) {
+          if (err) {
+            throw err;
+          }
+        });
       }
       catch(err){
         errors += 1;
@@ -52,11 +56,8 @@ fs.readdir(ogFolder, (err, files) => {
         }
         return 0;
       }
-
-      if(count === files.length){
-        console.log(`renamed ${count - errors} files, with ${errors} errors`);
-      }
     });
+
   });
 });
 
