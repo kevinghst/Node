@@ -1,6 +1,7 @@
 let ogFolder = './files/original';
 let fs = require('fs');
 let renameModule = require('./lib/rename');
+let writeModule = require('./lib/writeJson');
 let appendModule = require('./lib/append');
 
 fs.readdir(ogFolder, (err, files) => {
@@ -14,6 +15,7 @@ fs.readdir(ogFolder, (err, files) => {
     let fileType = nameArray[1];
 
     if(fileType === 'txt'){
+      // appendModule.appendTxt(ogFolder, file, errors, count, files.length);
       fs.appendFile(`${ogFolder}/${file}`, 'new data', (err) => {
         if (err) {
           errors += 1;
@@ -24,7 +26,7 @@ fs.readdir(ogFolder, (err, files) => {
         }
         count += 1;
         try{
-          renameModule.rename(ogFolder, file, fileName, fileType);
+          renameModule.rename(ogFolder, file);
         }
         catch(err){
           errors += 1;
@@ -33,7 +35,6 @@ fs.readdir(ogFolder, (err, files) => {
           }
           return 0;
         }
-
         if(count === files.length){
           console.log(`renamed ${count - errors} files, with ${errors} errors`);
         }
@@ -48,10 +49,8 @@ fs.readdir(ogFolder, (err, files) => {
           }
           return 0;
         }
-        appendModule.append(fileType, fileName, data, ogFolder, file, count, errors, files.length);
+        writeModule.writeToJson(data, ogFolder, file, count, errors, files.length);
       });
     }
-
-
   });
 });
