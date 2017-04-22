@@ -13,31 +13,45 @@ fs.readdir(ogFolder, (err, files) => {
     let fileName = nameArray[0];
     let fileType = nameArray[1];
 
-    fs.readFile(`${ogFolder}/${file}`, function(err, data){
-      count += 1;
-      if (err) {
-        errors += 1;
+    if(fileType === 'txt'){
+      fs.appendFile(`${ogFolder}/${file}`, 'new data', (err) => {
+        if (err) {
+          errors += 1;
+          if(count === files.length){
+            console.log(`renamed ${count - errors} files, with ${errors} errors`);
+          }
+          return 0;
+        }
+        count += 1;
+        try{
+          renameModule.rename(ogFolder, file, fileName, fileType);
+        }
+        catch(err){
+          errors += 1;
+          if(count === files.length){
+            console.log(`renamed ${count - errors} files, with ${errors} errors`);
+          }
+          return 0;
+        }
+
         if(count === files.length){
           console.log(`renamed ${count - errors} files, with ${errors} errors`);
         }
-        return 0;
-      }
-
-      try{
-        appendModule.append(fileType, data, ogFolder, file);
-        renameModule.rename(ogFolder, file, fileName, fileType);
-      }
-      catch(err){
-        errors += 1;
-        if(count === files.length){
-          console.log(`renamed ${count - errors} files, with ${errors} errors`);
+      })
+    }
+    else if(fileType === 'json'){
+      fs.readFile(`${ogFolder}/${file}`, function(err, data){
+        if (err) {
+          errors += 1;
+          if(count === files.length){
+            console.log(`renamed ${count - errors} files, with ${errors} errors`);
+          }
+          return 0;
         }
-        return 0;
-      }
+        appendModule.append(fileType, fileName, data, ogFolder, file, count, errors, files.length);
+      });
+    }
 
-      if(count === files.length){
-        console.log(`renamed ${count - errors} files, with ${errors} errors`);
-      }
-    });
+
   });
 });
