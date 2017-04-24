@@ -1,0 +1,5 @@
+
+Original Name - appended.txt
+Original Path - ./files/original/appended.txt
+New Name - appended_EDITED_2017-03-24_12-06.txt
+New Path - ./files/moved/appended_EDITED_2017-03-24_12-06.txt
